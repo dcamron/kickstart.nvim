@@ -624,7 +624,6 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        ty = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -637,6 +636,7 @@ require('lazy').setup({
         -- ts_ls = {},
 
         stylua = {}, -- Used to format Lua code
+        ty = {},
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
