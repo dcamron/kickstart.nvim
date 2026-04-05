@@ -340,6 +340,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
+        { '<leader>a', group = '[A]I' },
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
@@ -637,6 +638,7 @@ require('lazy').setup({
 
         stylua = {}, -- Used to format Lua code
         ty = {},
+        copilot = {},
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
@@ -794,6 +796,15 @@ require('lazy').setup({
         -- See :h blink-cmp-config-keymap for defining your own keymap
         preset = 'default',
 
+        -- Integrate sidekick NES with Tab
+        ['<Tab>'] = {
+          'snippet_forward',
+          function()
+            return require('sidekick').nes_jump_or_apply()
+          end,
+          'fallback',
+        },
+
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
       },
@@ -850,6 +861,26 @@ require('lazy').setup({
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       vim.cmd.colorscheme 'tokyonight-night'
     end,
+  },
+
+  { -- QoL plugin collection
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      bigfile = { enabled = true },
+      input = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+      words = { enabled = true },
+    },
+    keys = {
+      { ']]', function() Snacks.words.jump(vim.v.count1) end, desc = 'Next Reference', mode = { 'n', 't' } },
+      { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' } },
+      { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications' },
+    },
   },
 
   -- Highlight todo, notes, etc in comments
@@ -961,6 +992,97 @@ require('lazy').setup({
         end,
       })
     end,
+  },
+
+  { -- Treesitter textobjects: select, move, swap
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = 'main',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('nvim-treesitter-textobjects').setup {
+        select = { lookahead = true },
+        move = { set_jumps = true },
+      }
+
+      local ts_select = require 'nvim-treesitter-textobjects.select'
+      local move = require 'nvim-treesitter-textobjects.move'
+      local swap = require 'nvim-treesitter-textobjects.swap'
+      local ts_repeat_move = require 'nvim-treesitter-textobjects.repeatable_move'
+
+      -- Select textobjects
+      for _, mapping in ipairs {
+        { 'af', '@function.outer', 'a function' },
+        { 'if', '@function.inner', 'inner function' },
+        { 'ac', '@class.outer', 'a class' },
+        { 'ic', '@class.inner', 'inner class' },
+        { 'aa', '@parameter.outer', 'a parameter' },
+        { 'ia', '@parameter.inner', 'inner parameter' },
+      } do
+        vim.keymap.set({ 'x', 'o' }, mapping[1], function()
+          ts_select.select_textobject(mapping[2], 'textobjects')
+        end, { desc = 'Select ' .. mapping[3] })
+      end
+
+      -- Move: functions
+      vim.keymap.set({ 'n', 'x', 'o' }, ']m', function() move.goto_next_start('@function.outer', 'textobjects') end, { desc = 'Next function start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[m', function() move.goto_previous_start('@function.outer', 'textobjects') end, { desc = 'Prev function start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, ']M', function() move.goto_next_end('@function.outer', 'textobjects') end, { desc = 'Next function end' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[M', function() move.goto_previous_end('@function.outer', 'textobjects') end, { desc = 'Prev function end' })
+
+      -- Move: classes
+      vim.keymap.set({ 'n', 'x', 'o' }, ']C', function() move.goto_next_start('@class.outer', 'textobjects') end, { desc = 'Next class start' })
+      vim.keymap.set({ 'n', 'x', 'o' }, '[C', function() move.goto_previous_start('@class.outer', 'textobjects') end, { desc = 'Prev class start' })
+
+      -- Swap parameters
+      vim.keymap.set('n', 'gsa', function() swap.swap_next('@parameter.inner') end, { desc = 'Swap parameter forward' })
+      vim.keymap.set('n', 'gsA', function() swap.swap_previous('@parameter.inner') end, { desc = 'Swap parameter backward' })
+
+      -- Repeatable moves with ; and ,
+      vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move_next)
+      vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_previous)
+      vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
+      vim.keymap.set({ 'n', 'x', 'o' }, 'F', ts_repeat_move.builtin_F_expr, { expr = true })
+      vim.keymap.set({ 'n', 'x', 'o' }, 't', ts_repeat_move.builtin_t_expr, { expr = true })
+      vim.keymap.set({ 'n', 'x', 'o' }, 'T', ts_repeat_move.builtin_T_expr, { expr = true })
+    end,
+  },
+
+  { -- AI sidekick: Copilot NES + AI CLI terminal
+    'folke/sidekick.nvim',
+    opts = {
+      cli = {
+        mux = {
+          enabled = true,
+          backend = 'tmux',
+        },
+        tools = {
+          pi = {
+            cmd = { 'pi' },
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        '<tab>',
+        function()
+          if not require('sidekick').nes_jump_or_apply() then
+            return '<Tab>'
+          end
+        end,
+        expr = true,
+        desc = 'Goto/Apply Next Edit Suggestion',
+      },
+      { '<c-.>', function() require('sidekick.cli').focus() end, desc = 'Sidekick Focus', mode = { 'n', 't', 'i', 'x' } },
+      { '<leader>aa', function() require('sidekick.cli').toggle() end, desc = 'Sidekick Toggle CLI' },
+      { '<leader>as', function() require('sidekick.cli').select() end, desc = 'Select CLI' },
+      { '<leader>ad', function() require('sidekick.cli').close() end, desc = 'Detach CLI Session' },
+      { '<leader>at', function() require('sidekick.cli').send({ msg = '{this}' }) end, mode = { 'x', 'n' }, desc = 'Send This' },
+      { '<leader>af', function() require('sidekick.cli').send({ msg = '{file}' }) end, desc = 'Send File' },
+      { '<leader>av', function() require('sidekick.cli').send({ msg = '{selection}' }) end, mode = { 'x' }, desc = 'Send Visual Selection' },
+      { '<leader>ap', function() require('sidekick.cli').prompt() end, mode = { 'n', 'x' }, desc = 'Sidekick Select Prompt' },
+      { '<leader>ai', function() require('sidekick.cli').toggle({ name = 'pi', focus = true }) end, desc = 'Sidekick Toggle Pi' },
+    },
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
