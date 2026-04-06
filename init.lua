@@ -535,7 +535,6 @@ require('lazy').setup({
         -- ts_ls = {},
 
         stylua = {}, -- Used to format Lua code
-        ty = {},
         copilot = {},
 
         -- Special Lua Config, as recommended by neovim help docs
@@ -591,6 +590,9 @@ require('lazy').setup({
         vim.lsp.config(name, server)
         vim.lsp.enable(name)
       end
+
+      vim.lsp.enable('ty')
+
     end,
   },
 
