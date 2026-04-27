@@ -773,6 +773,7 @@ require('lazy').setup({
       lazygit = { enabled = true },
       notifier = { enabled = true },
       picker = { enabled = true, sources = { files = { hidden = true }, smart = { hidden = true }, explorer = { hidden = true } } },
+      explorer = { enabled = true },
       quickfile = { enabled = true },
       scope = { enabled = true },
       words = { enabled = true },
