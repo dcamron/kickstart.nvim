@@ -317,6 +317,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>a', group = '[A]I' },
+        { '<leader>g', group = '[G]it' },
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
@@ -809,6 +810,23 @@ require('lazy').setup({
       { '[[', function() Snacks.words.jump(-vim.v.count1) end, desc = 'Prev Reference', mode = { 'n', 't' } },
       -- Notifier
       { '<leader>un', function() Snacks.notifier.hide() end, desc = 'Dismiss All Notifications' },
+      -- Smart / misc pickers
+      { '<leader>s<space>', function() Snacks.picker.smart() end, desc = 'Smart Find Files' },
+      { '<leader>sN', function() Snacks.picker.notifications() end, desc = '[S]earch [N]otifications' },
+      { '<leader>sp', function() Snacks.picker.projects() end, desc = '[S]earch [P]rojects' },
+      { '<leader>s"', function() Snacks.picker.registers() end, desc = '[S]earch [R]egisters' },
+      { '<leader>sj', function() Snacks.picker.jumps() end, desc = '[S]earch [J]umps' },
+      { '<leader>sm', function() Snacks.picker.marks() end, desc = '[S]earch [M]arks' },
+      { '<leader>su', function() Snacks.picker.undo() end, desc = '[S]earch [U]ndo history' },
+      -- Explorer
+      { '<leader>e', function() Snacks.picker.explorer() end, desc = '[E]xplorer' },
+      -- Git pickers
+      { '<leader>gl', function() Snacks.picker.git_log() end, desc = '[G]it [L]og' },
+      { '<leader>gf', function() Snacks.picker.git_log_file() end, desc = '[G]it log current [F]ile' },
+      { '<leader>gs', function() Snacks.picker.git_status() end, desc = '[G]it [S]tatus' },
+      -- GitHub pickers
+      { '<leader>gi', function() Snacks.picker.gh_issues() end, desc = '[G]H [I]ssues' },
+      { '<leader>gp', function() Snacks.picker.gh_prs() end, desc = '[G]H [P]Rs' },
     },
   },
 
