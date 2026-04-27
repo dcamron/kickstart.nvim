@@ -986,7 +986,7 @@ require('lazy').setup({
         },
         tools = {
           pi = {
-            cmd = { 'pi' },
+            cmd = { 'pi', '--tools', 'read,write,edit,bash,grep,ls' },
           },
         },
       },
