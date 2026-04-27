@@ -593,8 +593,7 @@ require('lazy').setup({
         vim.lsp.enable(name)
       end
 
-      vim.lsp.enable('ty')
-
+      vim.lsp.enable 'ty'
     end,
   },
 
@@ -701,9 +700,7 @@ require('lazy').setup({
         -- Integrate sidekick NES with Tab
         ['<Tab>'] = {
           'snippet_forward',
-          function()
-            return require('sidekick').nes_jump_or_apply()
-          end,
+          function() return require('sidekick').nes_jump_or_apply() end,
           'fallback',
         },
 
@@ -795,7 +792,7 @@ require('lazy').setup({
       { '<leader><leader>', function() Snacks.picker.buffers() end, desc = '[ ] Find existing buffers' },
       { '<leader>/', function() Snacks.picker.lines() end, desc = '[/] Fuzzily search in current buffer' },
       { '<leader>s/', function() Snacks.picker.grep_buffers() end, desc = '[S]earch [/] in Open Files' },
-      { '<leader>sn', function() Snacks.picker.files({ cwd = vim.fn.stdpath('config') }) end, desc = '[S]earch [N]eovim files' },
+      { '<leader>sn', function() Snacks.picker.files { cwd = vim.fn.stdpath 'config' } end, desc = '[S]earch [N]eovim files' },
       -- lazygit
       { '<leader>lg', function() Snacks.lazygit.open() end, desc = 'Open [L]azy[G]it' },
       -- LSP
@@ -965,9 +962,7 @@ require('lazy').setup({
         { 'aa', '@parameter.outer', 'a parameter' },
         { 'ia', '@parameter.inner', 'inner parameter' },
       } do
-        vim.keymap.set({ 'x', 'o' }, mapping[1], function()
-          ts_select.select_textobject(mapping[2], 'textobjects')
-        end, { desc = 'Select ' .. mapping[3] })
+        vim.keymap.set({ 'x', 'o' }, mapping[1], function() ts_select.select_textobject(mapping[2], 'textobjects') end, { desc = 'Select ' .. mapping[3] })
       end
 
       -- Move: functions
@@ -981,8 +976,8 @@ require('lazy').setup({
       vim.keymap.set({ 'n', 'x', 'o' }, '[C', function() move.goto_previous_start('@class.outer', 'textobjects') end, { desc = 'Prev class start' })
 
       -- Swap parameters
-      vim.keymap.set('n', 'gsa', function() swap.swap_next('@parameter.inner') end, { desc = 'Swap parameter forward' })
-      vim.keymap.set('n', 'gsA', function() swap.swap_previous('@parameter.inner') end, { desc = 'Swap parameter backward' })
+      vim.keymap.set('n', 'gsa', function() swap.swap_next '@parameter.inner' end, { desc = 'Swap parameter forward' })
+      vim.keymap.set('n', 'gsA', function() swap.swap_previous '@parameter.inner' end, { desc = 'Swap parameter backward' })
 
       -- Repeatable moves with ; and ,
       vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move_next)
@@ -1013,9 +1008,7 @@ require('lazy').setup({
       {
         '<tab>',
         function()
-          if not require('sidekick').nes_jump_or_apply() then
-            return '<Tab>'
-          end
+          if not require('sidekick').nes_jump_or_apply() then return '<Tab>' end
         end,
         expr = true,
         desc = 'Goto/Apply Next Edit Suggestion',
@@ -1024,11 +1017,11 @@ require('lazy').setup({
       { '<leader>aa', function() require('sidekick.cli').toggle() end, desc = 'Sidekick Toggle CLI' },
       { '<leader>as', function() require('sidekick.cli').select() end, desc = 'Select CLI' },
       { '<leader>ad', function() require('sidekick.cli').close() end, desc = 'Detach CLI Session' },
-      { '<leader>at', function() require('sidekick.cli').send({ msg = '{this}' }) end, mode = { 'x', 'n' }, desc = 'Send This' },
-      { '<leader>af', function() require('sidekick.cli').send({ msg = '{file}' }) end, desc = 'Send File' },
-      { '<leader>av', function() require('sidekick.cli').send({ msg = '{selection}' }) end, mode = { 'x' }, desc = 'Send Visual Selection' },
+      { '<leader>at', function() require('sidekick.cli').send { msg = '{this}' } end, mode = { 'x', 'n' }, desc = 'Send This' },
+      { '<leader>af', function() require('sidekick.cli').send { msg = '{file}' } end, desc = 'Send File' },
+      { '<leader>av', function() require('sidekick.cli').send { msg = '{selection}' } end, mode = { 'x' }, desc = 'Send Visual Selection' },
       { '<leader>ap', function() require('sidekick.cli').prompt() end, mode = { 'n', 'x' }, desc = 'Sidekick Select Prompt' },
-      { '<leader>ai', function() require('sidekick.cli').toggle({ name = 'pi', focus = true }) end, desc = 'Sidekick Toggle Pi' },
+      { '<leader>ai', function() require('sidekick.cli').toggle { name = 'pi', focus = true } end, desc = 'Sidekick Toggle Pi' },
     },
   },
 
