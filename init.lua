@@ -321,8 +321,9 @@ require('lazy').setup({
       spec = {
         { '<leader>a', group = '[A]I' },
         { '<leader>g', group = '[G]it' },
+        { '<leader>o', group = 'T[o]ggle' },
         { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
-        { '<leader>t', group = '[T]oggle' },
+        { '<leader>t', group = '[T]ests' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } }, -- Enable gitsigns recommended keymaps first
         { 'gr', group = 'LSP Actions', mode = { 'n' } },
       },
@@ -404,6 +405,24 @@ require('lazy').setup({
       -- NOTE: Telescope keymaps removed — now handled by Snacks picker.
       -- See snacks.nvim keys for search, LSP, and buffer picker mappings.
     end,
+  },
+  {
+    'nvim-neotest/neotest',
+    dependencies = {
+      'nvim-neotest/nvim-nio',
+      'nvim-lua/plenary.nvim',
+      'antoinemadec/FixCursorHold.nvim',
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-neotest/neotest-python',
+    },
+    keys = {
+      { '<leader>tr', function() require('neotest').run.run() end, desc = '[T]est [R]un nearest' },
+      { '<leader>tf', function() require('neotest').run.run(vim.fn.expand '%') end, desc = '[T]est run [F]ile' },
+      { '<leader>ts', function() require('neotest').summary.toggle() end, desc = '[T]est [S]ummary' },
+      { '<leader>to', function() require('neotest').output_panel.toggle() end, desc = '[T]est [O]utput panel' },
+      { '<leader>tl', function() require('neotest').run.run_last() end, desc = '[T]est run [L]ast' },
+    },
+    config = function() require('neotest').setup { adapters = { require 'neotest-python' } } end,
   },
 
   -- LSP Plugins
@@ -517,7 +536,7 @@ require('lazy').setup({
           --
           -- This may be unwanted, since they displace some of your code
           if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+            map('<leader>oh', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, 'T[o]ggle Inlay [H]ints')
           end
         end,
       })
