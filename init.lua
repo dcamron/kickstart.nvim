@@ -458,28 +458,26 @@ do
   -- [[ Fuzzy Finder (files, lsp, etc) ]]
   vim.pack.add { gh 'folke/snacks.nvim' }
   require('snacks').setup {
-    opts = {
-      bigfile = { enabled = true },
-      input = { enabled = true },
-      lazygit = { enabled = true },
-      notifier = { enabled = true },
-      explorer = { enabled = true },
-      picker = {
-        enabled = true,
-        sources = {
-          files = { hidden = true },
-          smart = { hidden = true },
-          explorer = {
-            hidden = true,
-            jump = { close = true },
-          },
-          grep = { hidden = true },
+    bigfile = { enabled = true },
+    input = { enabled = true },
+    lazygit = { enabled = true },
+    notifier = { enabled = true },
+    explorer = { enabled = true },
+    picker = {
+      enabled = true,
+      sources = {
+        files = { hidden = true },
+        smart = { hidden = true },
+        explorer = {
+          hidden = true,
+          jump = { close = true },
         },
+        grep = { hidden = true },
       },
-      quickfile = { enabled = true },
-      scope = { enabled = true },
-      words = { enabled = true },
-    }
+    },
+    quickfile = { enabled = true },
+    scope = { enabled = true },
+    words = { enabled = true },
   }
 
   vim.keymap.set('n', '<leader>sh', function() Snacks.picker.help() end, { desc = '[S]earch [H]elp' })
@@ -535,7 +533,6 @@ do
       vim.keymap.set('n', 'grt', function() Snacks.picker.lsp_type_definitions() end, { buffer = buf, desc = '[G]oto [T]ype Definition' })
     end,
   })
-
 end
 
 -- ============================================================
@@ -864,22 +861,22 @@ do
 
   -- Ensure basic parsers are installed
   local parsers = {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'python',
-        'query',
-        'rust',
-        'vim',
-        'vimdoc',
-        'yaml'
-      }
-      require('nvim-treesitter').install(parsers)
+    'bash',
+    'c',
+    'diff',
+    'html',
+    'lua',
+    'luadoc',
+    'markdown',
+    'markdown_inline',
+    'python',
+    'query',
+    'rust',
+    'vim',
+    'vimdoc',
+    'yaml',
+  }
+  require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
   ---@param language string
