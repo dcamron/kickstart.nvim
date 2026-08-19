@@ -726,8 +726,19 @@ require('lazy').setup({
       input = { enabled = true },
       lazygit = { enabled = true },
       notifier = { enabled = true },
-      picker = { enabled = true, sources = { files = { hidden = true }, smart = { hidden = true }, explorer = { hidden = true } } },
       explorer = { enabled = true },
+      picker = {
+        enabled = true,
+        sources = {
+          files = { hidden = true },
+          smart = { hidden = true },
+          explorer = {
+            hidden = true,
+            jump = { close = true },
+          },
+          grep = { hidden = true },
+        },
+      },
       quickfile = { enabled = true },
       scope = { enabled = true },
       words = { enabled = true },
