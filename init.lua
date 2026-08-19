@@ -558,8 +558,9 @@ require('lazy').setup({
         -- ts_ls = {},
 
         stylua = {}, -- Used to format Lua code
-        copilot = {},
+        -- copilot = {},
         gh_actions_ls = {},
+        yamlls = {},
 
         -- Special Lua Config, as recommended by neovim help docs
         lua_ls = {
